@@ -1,23 +1,26 @@
 <template>
   <div id="app">
     <div>You are: {{ username }}</div>
-    <div class="solution">
-      <div
-        v-for="(word, index) in solution"
-        :key="index"
-        class="word"
-        :class="{ solved: word.solved }"
-      >
-        <span>{{ word.text }}</span>
-        <span v-if="word.solved" class="username">{{ word.solvedBy }}</span>
+    <div v-if="game">
+      <div class="solution">
+        <div
+          v-for="(word, index) in game.solution"
+          :key="index"
+          class="word"
+          :class="{ solved: word.solved }"
+        >
+          <span>{{ word.text }}</span>
+          <span v-if="word.solved" class="username">{{ word.solvedBy }}</span>
+        </div>
+      </div>
+      <Stats :solution="game.solution" />
+      <GameOver v-if="gameOver" @restart="restart" class="wrapper" />
+      <div v-else class="wrapper">
+        <input type="text" v-model="guess" @keyup.enter="submit" />
+        <button type="submit" @click="submit">Guess</button>
       </div>
     </div>
-    <Stats :solution="solution" />
-    <GameOver v-if="gameOver" @restart="restart" class="wrapper" />
-    <div v-else class="wrapper">
-      <input type="text" v-model="guess" @keyup.enter="submit" />
-      <button type="submit" @click="submit">Guess</button>
-    </div>
+    <div v-else>Loading</div>
   </div>
 </template>
 
@@ -38,7 +41,6 @@ export default {
   data() {
     return {
       words: [],
-      solution: [],
       game: null,
       guess: '',
       username: '',
@@ -53,9 +55,8 @@ export default {
     this.createUsername()
 
     const responseGame = await axios.get('http://localhost:3003/api/games')
-    if (responseGame.data.length && responseGame.data[0].solution) {
-      this.solution = responseGame.data[0].solution
-      this.solution.id = responseGame.data[0].id
+    if (responseGame.data && responseGame.data.solution) {
+      this.game = responseGame.data
     } else {
       this.createSolution()
     }
@@ -63,18 +64,18 @@ export default {
 
   methods: {
     submit() {
-      const i = this.solution.findIndex(
+      const i = this.game.solution.findIndex(
         (word) => word.text.toLowerCase() === this.guess.toLowerCase()
       )
       if (i > -1) {
-        this.solution[i].solved = true
-        this.solution[i].solvedBy = this.username
+        this.game.solution[i].solved = true
+        this.game.solution[i].solvedBy = this.username
         axios.put(
-          `http://localhost:3003/api/games/${this.solution.id}`,
-          this.solution
+          `http://localhost:3003/api/games/${this.game.id}`,
+          this.game.solution
         )
       }
-      if (!this.solution.some((word) => !word.solved)) {
+      if (!this.game.solution.some((word) => !word.solved)) {
         this.gameOver = true
       }
       this.guess = ''
@@ -82,7 +83,7 @@ export default {
 
     async restart() {
       this.gameOver = false
-      await axios.delete(`http://localhost:3003/api/games/${this.solution.id}`)
+      await axios.delete(`http://localhost:3003/api/games/${this.game.id}`)
       this.createSolution()
     },
 
@@ -94,7 +95,7 @@ export default {
       const subject = this.getRandom(this.getType('subject'))
       const adverb = this.getRandom(this.getType('adverb'))
 
-      this.solution = [
+      const solution = [
         { ...article, solved: false },
         { ...adjective, solved: false },
         { ...object, solved: false },
@@ -105,10 +106,9 @@ export default {
 
       const response = await axios.post(
         'http://localhost:3003/api/games',
-        this.solution
+        solution
       )
-      console.log(response.data)
-      this.solution.id = response.data.id
+      this.game = response.data
     },
 
     createUsername() {

@@ -3,7 +3,7 @@ const Game = require('../models/game')
 
 gamesRouter.get('/', async (request, response) => {
   const games = await Game.find({})
-  response.json(games)
+  response.json(games[0])
 })
 
 gamesRouter.post('/', async (request, response) => {
