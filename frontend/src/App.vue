@@ -46,7 +46,7 @@ export default {
   },
 
   async mounted() {
-    const response = await axios.get('http://localhost:3001/words')
+    const response = await axios.get('http://localhost:3003/api/words')
     this.words = response.data
     this.createUsername()
     this.createSolution()
@@ -73,31 +73,35 @@ export default {
     },
 
     createSolution() {
-      const article = this.getRandom(this.words.articles)
-      const adjective = this.getRandom(this.words.adjectives)
-      const object = this.getRandom(this.words.objects)
-      const verb = this.getRandom(this.words.verbs)
-      const subject = this.getRandom(this.words.subjects)
-      const adverb = this.getRandom(this.words.adverbs)
+      const article = this.getRandom(this.getType('article'))
+      const adjective = this.getRandom(this.getType('adjective'))
+      const object = this.getRandom(this.getType('object'))
+      const verb = this.getRandom(this.getType('verb'))
+      const subject = this.getRandom(this.getType('subject'))
+      const adverb = this.getRandom(this.getType('adverb'))
 
       this.solution = [
-        { text: article, solved: false },
-        { text: adjective, solved: false },
-        { text: object, solved: false },
-        { text: verb, solved: false },
-        { text: subject, solved: false },
-        { text: adverb, solved: false },
+        { ...article, solved: false },
+        { ...adjective, solved: false },
+        { ...object, solved: false },
+        { ...verb, solved: false },
+        { ...subject, solved: false },
+        { ...adverb, solved: false },
       ]
     },
 
     createUsername() {
-      const adjective = this.getRandom(this.words.adjectives)
-      const object = this.getRandom(this.words.objects)
-      this.username = `${adjective}_${object}`
+      const adjective = this.getRandom(this.getType('adjective'))
+      const object = this.getRandom(this.getType('object'))
+      this.username = `${adjective.text}_${object.text}`
     },
 
     getRandom(list) {
       return list[Math.floor(Math.random() * list.length)]
+    },
+
+    getType(type) {
+      return this.words.filter((word) => word.type === type)
     },
   },
 }
