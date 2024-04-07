@@ -48,8 +48,15 @@ export default {
   async mounted() {
     const response = await axios.get('http://localhost:3003/api/words')
     this.words = response.data
+
     this.createUsername()
-    this.createSolution()
+
+    const responseGame = await axios.get('http://localhost:3003/api/games')
+    if (responseGame.data.length && responseGame.data[0].solution) {
+      this.solution = responseGame.data[0].solution
+    } else {
+      this.createSolution()
+    }
   },
 
   methods: {
@@ -72,7 +79,7 @@ export default {
       this.createSolution()
     },
 
-    createSolution() {
+    async createSolution() {
       const article = this.getRandom(this.getType('article'))
       const adjective = this.getRandom(this.getType('adjective'))
       const object = this.getRandom(this.getType('object'))
@@ -88,6 +95,12 @@ export default {
         { ...subject, solved: false },
         { ...adverb, solved: false },
       ]
+
+      const response = await axios.post(
+        'http://localhost:3003/api/games',
+        this.solution
+      )
+      console.log(response)
     },
 
     createUsername() {

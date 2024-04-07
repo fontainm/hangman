@@ -6,6 +6,7 @@ const middleware = require('./utils/middleware')
 
 const wordsController = require('./controllers/words')
 const usersController = require('./controllers/users')
+const gamesController = require('./controllers/games')
 
 const mongoose = require('mongoose')
 
@@ -26,6 +27,7 @@ app.use(middleware.errorHandler)
 
 app.use('/api/words', wordsController)
 app.use('/api/users', usersController)
+app.use('/api/games', gamesController)
 
 const PORT = config.PORT
 app.listen(PORT, () => {
