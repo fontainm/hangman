@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <div>You are: {{ username }}</div>
     <div class="solution">
       <div
         v-for="(word, index) in solution"
@@ -39,7 +40,7 @@ export default {
       words: [],
       solution: [],
       guess: '',
-      username: 'user1',
+      username: '',
       gameOver: false,
     }
   },
@@ -47,6 +48,7 @@ export default {
   async mounted() {
     const response = await axios.get('http://localhost:3001/words')
     this.words = response.data
+    this.createUsername()
     this.createSolution()
   },
 
@@ -70,7 +72,7 @@ export default {
       this.createSolution()
     },
 
-    async createSolution() {
+    createSolution() {
       const article = this.getRandom(this.words.articles)
       const adjective = this.getRandom(this.words.adjectives)
       const object = this.getRandom(this.words.objects)
@@ -88,6 +90,12 @@ export default {
       ]
     },
 
+    createUsername() {
+      const adjective = this.getRandom(this.words.adjectives)
+      const object = this.getRandom(this.words.objects)
+      this.username = `${adjective}_${object}`
+    },
+
     getRandom(list) {
       return list[Math.floor(Math.random() * list.length)]
     },
@@ -97,7 +105,7 @@ export default {
 
 <style type="scss">
 .solution {
-  font-size: 2rem;
+  font-size: 3rem;
   margin: 2rem 0;
   display: flex;
   justify-content: center;

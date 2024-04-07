@@ -1,11 +1,37 @@
 {
   "words": {
-    "articles": ["the", "a", "my", "his", "her", "our", "their", "no"],
-    "adjectives": ["cool", "hungry", "slow", "nice", "thin", "young", "wrong"],
+    "articles": [
+      "the",
+      "a",
+      "my",
+      "his",
+      "her",
+      "our",
+      "their",
+      "no",
+      "one",
+      "this",
+      "that"
+    ],
+    "adjectives": [
+      "cool",
+      "hungry",
+      "slow",
+      "nice",
+      "thin",
+      "young",
+      "wrong",
+      "sarcastic",
+      "beautiful",
+      "red",
+      "dead"
+    ],
     "objects": [
       "bird",
       "clock",
       "boy",
+      "cow",
+      "pineapple",
       "horse",
       "astronaut",
       "duck",
