@@ -4,20 +4,28 @@ const cors = require('cors')
 const config = require('./utils/config')
 const middleware = require('./utils/middleware')
 
-const Word = require('./models/word')
+const wordsController = require('./controllers/words')
+const usersController = require('./controllers/users')
+
+const mongoose = require('mongoose')
+
+mongoose.set('strictQuery', false)
+
+mongoose
+  .connect(config.MONGODB_URI)
+  .then(() => {
+    console.log('connected to MongoDB')
+  })
+  .catch((error) => {
+    console.log('error connecting to MongoDB:', error.message)
+  })
 
 app.use(cors())
 app.use(express.json())
 app.use(middleware.errorHandler)
 
-app.get('/api/words', async (request, response, next) => {
-  try {
-    const result = await Word.find({})
-    response.json(result)
-  } catch (error) {
-    next(error)
-  }
-})
+app.use('/api/words', wordsController)
+app.use('/api/users', usersController)
 
 const PORT = config.PORT
 app.listen(PORT, () => {
