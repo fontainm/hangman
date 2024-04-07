@@ -7,7 +7,6 @@ gamesRouter.get('/', async (request, response) => {
 })
 
 gamesRouter.post('/', async (request, response) => {
-  console.log('trying to post', request.body)
   const game = new Game({
     started_at: new Date(),
     solution: request.body,
@@ -15,6 +14,22 @@ gamesRouter.post('/', async (request, response) => {
 
   const savedGame = await game.save()
   response.status(201).json(savedGame)
+})
+
+gamesRouter.put('/:id', async (request, response) => {
+  const game = await Game.findByIdAndUpdate(
+    request.params.id,
+    {
+      solution: request.body,
+    },
+    { new: true }
+  )
+  response.json(game)
+})
+
+gamesRouter.delete('/:id', async (request, response) => {
+  await Game.findByIdAndDelete(request.params.id)
+  response.status(204).end()
 })
 
 module.exports = gamesRouter

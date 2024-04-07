@@ -39,6 +39,7 @@ export default {
     return {
       words: [],
       solution: [],
+      game: null,
       guess: '',
       username: '',
       gameOver: false,
@@ -54,6 +55,7 @@ export default {
     const responseGame = await axios.get('http://localhost:3003/api/games')
     if (responseGame.data.length && responseGame.data[0].solution) {
       this.solution = responseGame.data[0].solution
+      this.solution.id = responseGame.data[0].id
     } else {
       this.createSolution()
     }
@@ -67,6 +69,10 @@ export default {
       if (i > -1) {
         this.solution[i].solved = true
         this.solution[i].solvedBy = this.username
+        axios.put(
+          `http://localhost:3003/api/games/${this.solution.id}`,
+          this.solution
+        )
       }
       if (!this.solution.some((word) => !word.solved)) {
         this.gameOver = true
@@ -74,8 +80,9 @@ export default {
       this.guess = ''
     },
 
-    restart() {
+    async restart() {
       this.gameOver = false
+      await axios.delete(`http://localhost:3003/api/games/${this.solution.id}`)
       this.createSolution()
     },
 
@@ -100,7 +107,8 @@ export default {
         'http://localhost:3003/api/games',
         this.solution
       )
-      console.log(response)
+      console.log(response.data)
+      this.solution.id = response.data.id
     },
 
     createUsername() {
