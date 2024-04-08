@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <div>You are: {{ username }}</div>
     <div v-if="game">
+      <div>You are: {{ username }}</div>
       <div class="solution">
         <div
           v-for="(word, index) in game.solution"
@@ -25,7 +25,8 @@
 </template>
 
 <script>
-import axios from 'axios'
+import wordsService from './services/words'
+import gamesService from './services/games'
 
 import GameOver from './components/GameOver'
 import Stats from './components/Stats'
@@ -49,31 +50,23 @@ export default {
   },
 
   async mounted() {
-    const response = await axios.get('http://localhost:3003/api/words')
-    this.words = response.data
-
+    this.words = await wordsService.getAll()
     this.createUsername()
-
-    const responseGame = await axios.get('http://localhost:3003/api/games')
-    if (responseGame.data && responseGame.data.solution) {
-      this.game = responseGame.data
-    } else {
-      this.createSolution()
+    this.game = await gamesService.getGame()
+    if (!this.game) {
+      this.createGame()
     }
   },
 
   methods: {
-    submit() {
+    async submit() {
       const i = this.game.solution.findIndex(
         (word) => word.text.toLowerCase() === this.guess.toLowerCase()
       )
       if (i > -1) {
         this.game.solution[i].solved = true
         this.game.solution[i].solvedBy = this.username
-        axios.put(
-          `http://localhost:3003/api/games/${this.game.id}`,
-          this.game.solution
-        )
+        await gamesService.updateGame(this.game)
       }
       if (!this.game.solution.some((word) => !word.solved)) {
         this.gameOver = true
@@ -83,11 +76,11 @@ export default {
 
     async restart() {
       this.gameOver = false
-      await axios.delete(`http://localhost:3003/api/games/${this.game.id}`)
-      this.createSolution()
+      await gamesService.removeGame(this.game.id)
+      this.createGame()
     },
 
-    async createSolution() {
+    async createGame() {
       const article = this.getRandom(this.getType('article'))
       const adjective = this.getRandom(this.getType('adjective'))
       const object = this.getRandom(this.getType('object'))
@@ -104,11 +97,7 @@ export default {
         { ...adverb, solved: false },
       ]
 
-      const response = await axios.post(
-        'http://localhost:3003/api/games',
-        solution
-      )
-      this.game = response.data
+      this.game = await gamesService.addGame(solution)
     },
 
     createUsername() {
