@@ -63,7 +63,7 @@ export default {
       const i = this.game.solution.findIndex(
         (word) => word.text.toLowerCase() === this.guess.toLowerCase()
       )
-      if (i > -1) {
+      if (i > -1 && !this.game.solution[i].solved) {
         this.game.solution[i].solved = true
         this.game.solution[i].solvedBy = this.username
         await gamesService.updateGame(this.game)
@@ -139,22 +139,22 @@ export default {
 
     span {
       color: #0c6980;
+
+      &.username {
+        position: absolute;
+        font-size: 0.7rem;
+        background: #222;
+        color: #c4dbe0;
+        top: -1.7rem;
+        right: 0.5rem;
+        padding: 0.5rem;
+        border-radius: 0.5rem 0.5rem 0 0;
+      }
     }
 
     &.solved {
       transform: rotateY(0);
     }
-  }
-
-  .username {
-    position: absolute;
-    font-size: 0.7rem;
-    background: #222;
-    color: white;
-    top: -1.7rem;
-    right: 0.5rem;
-    padding: 0.5rem;
-    border-radius: 0.5rem 0.5rem 0 0;
   }
 }
 
