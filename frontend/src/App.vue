@@ -51,7 +51,10 @@ export default {
 
   async mounted() {
     this.words = await wordsService.getAll()
-    this.createUsername()
+    this.username = window.localStorage.getItem('hangmanuser')
+    if (!this.username) {
+      this.createUsername()
+    }
     this.game = await gamesService.getGame()
     if (!this.game) {
       this.createGame()
@@ -104,6 +107,7 @@ export default {
       const adjective = this.getRandom(this.getType('adjective'))
       const object = this.getRandom(this.getType('object'))
       this.username = `${adjective.text}_${object.text}`
+      window.localStorage.setItem('hangmanuser', this.username)
     },
 
     getRandom(list) {
@@ -128,13 +132,11 @@ export default {
   div.word {
     padding: 1rem;
     margin: 0.25rem;
-    border-bottom: 3px solid #c4dbe0;
     line-height: 1;
-    background: #c4dbe0;
+    background: #a4bbc0;
     border-radius: 0.5rem;
     transform: rotateY(180deg);
     transition: all 0.5s ease;
-    box-shadow: 2px 2px 8px #444;
     cursor: pointer;
 
     span {
@@ -154,6 +156,8 @@ export default {
 
     &.solved {
       transform: rotateY(0);
+      background: #c4dbe0;
+      box-shadow: 2px 2px 8px #444;
     }
   }
 }
