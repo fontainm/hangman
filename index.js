@@ -21,6 +21,11 @@ io.on('connection', (socket) => {
     console.log('User disconnected')
   })
 
+  socket.on('join game', (username) => {
+    console.log(`User ${username} joined`)
+    io.emit('join game', username)
+  })
+
   socket.on('update solution', (msg) => {
     io.emit('update solution', msg)
   })

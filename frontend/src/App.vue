@@ -13,8 +13,13 @@
           <span v-if="word.solved" class="username">{{ word.solvedBy }}</span>
         </div>
       </div>
-      <Stats :solution="game.solution" />
-      <GameOver v-if="gameOver" @restart="restart" class="wrapper" />
+      <Stats :solution="game.solution" :users="users" />
+      <GameOver
+        v-if="gameOver"
+        :solution="game.solution"
+        @restart="restart"
+        class="wrapper"
+      />
       <div v-else class="wrapper">
         <input type="text" v-model="guess" @keyup.enter="submit" />
         <button type="submit" @click="submit">Guess</button>
@@ -45,6 +50,7 @@ export default {
       game: null,
       guess: '',
       username: '',
+      users: [],
       gameOver: false,
     }
   },
@@ -55,6 +61,10 @@ export default {
     },
     disconnect() {
       console.log('Disconnected from server')
+    },
+    'join game'(username) {
+      console.log(username, 'joined')
+      this.users.push(username)
     },
     'update solution'(solution) {
       this.game.solution = solution
@@ -72,10 +82,12 @@ export default {
     if (!this.username) {
       this.createUsername()
     }
+    this.$socket.emit('join game', this.username)
     this.game = await gamesService.getGame()
     if (!this.game) {
       this.createGame()
     }
+    this.checkGameOver()
   },
 
   methods: {
