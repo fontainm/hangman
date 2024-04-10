@@ -1,5 +1,5 @@
 import axios from 'axios'
-const baseUrl = 'http://localhost:3003/api/games'
+const baseUrl = '/api/games'
 
 const getGame = async () => {
   const response = await axios.get(baseUrl)

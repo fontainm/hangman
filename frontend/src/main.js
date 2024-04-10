@@ -6,8 +6,9 @@ import SocketIO from 'socket.io-client'
 
 Vue.config.productionTip = false
 
-/* Establish Connection */
-const socketConnection = SocketIO('http://localhost:3003')
+const socketUrl =
+  process.env.NODE_ENV === 'production' ? undefined : 'http://localhost:3003'
+const socketConnection = SocketIO(socketUrl)
 
 Vue.use(
   new VueSocketIO({
