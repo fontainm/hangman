@@ -49,6 +49,23 @@ export default {
     }
   },
 
+  sockets: {
+    connect() {
+      console.log('Connected to server')
+    },
+    disconnect() {
+      console.log('Disconnected from server')
+    },
+    'update solution'(solution) {
+      this.game.solution = solution
+      this.checkGameOver()
+    },
+    'reset game'(game) {
+      this.game = game
+      this.gameOver = false
+    },
+  },
+
   async mounted() {
     this.words = await wordsService.getAll()
     this.username = window.localStorage.getItem('hangmanuser')
@@ -70,11 +87,16 @@ export default {
         this.game.solution[i].solved = true
         this.game.solution[i].solvedBy = this.username
         await gamesService.updateGame(this.game)
+        this.$socket.emit('update solution', this.game.solution)
       }
+      this.checkGameOver()
+      this.guess = ''
+    },
+
+    checkGameOver() {
       if (!this.game.solution.some((word) => !word.solved)) {
         this.gameOver = true
       }
-      this.guess = ''
     },
 
     async restart() {
@@ -101,6 +123,7 @@ export default {
       ]
 
       this.game = await gamesService.addGame(solution)
+      this.$socket.emit('reset game', this.game)
     },
 
     createUsername() {

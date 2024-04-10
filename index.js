@@ -8,6 +8,28 @@ const wordsController = require('./controllers/words')
 const usersController = require('./controllers/users')
 const gamesController = require('./controllers/games')
 
+const server = require('http').createServer(app)
+const io = require('socket.io')(server, {
+  cors: {
+    origin: '*',
+  },
+})
+io.on('connection', (socket) => {
+  console.log('User connected')
+
+  socket.on('disconnect', () => {
+    console.log('User disconnected')
+  })
+
+  socket.on('update solution', (msg) => {
+    io.emit('update solution', msg)
+  })
+
+  socket.on('reset game', (game) => {
+    io.emit('reset game', game)
+  })
+})
+
 const mongoose = require('mongoose')
 
 mongoose.set('strictQuery', false)
@@ -30,6 +52,6 @@ app.use('/api/users', usersController)
 app.use('/api/games', gamesController)
 
 const PORT = config.PORT
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
