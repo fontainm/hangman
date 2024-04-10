@@ -191,6 +191,7 @@ export default {
   flex-direction: column;
   background: #c4dbe0;
   width: 100%;
+  margin: auto;
   border-radius: 0.5rem;
   padding: 1rem;
   box-shadow: 2px 2px 8px #444;
@@ -217,6 +218,20 @@ export default {
     outline: none !important;
     padding: 1rem;
     border-radius: 0.5rem;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .solution {
+    font-size: 1.75rem;
+  }
+
+  .wrapper {
+    button,
+    input {
+      font-size: 1.75rem;
+      padding: 0.75rem;
+    }
   }
 }
 </style>
