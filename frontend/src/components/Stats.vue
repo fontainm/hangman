@@ -1,21 +1,24 @@
 <template>
   <div class="stats">
-    <div
-      v-for="(user, index) in Object.entries(solvers).sort(
-        (a, b) => b[1] - a[1]
-      )"
-      :key="index"
-      class="scoreboard"
-    >
-      <div>
-        {{ user[0] }}
-      </div>
-      <div>{{ user[1] }}</div>
-    </div>
-
-    <div class="score">
-      {{ solvedWords.length }} / {{ solution.length }} solved
-    </div>
+    <table class="scoreboard">
+      <tr>
+        <th align="left">Rank</th>
+        <th>User</th>
+        <th>Score</th>
+      </tr>
+      <tr
+        v-for="(user, index) in Object.entries(solvers).sort(
+          (a, b) => b[1] - a[1]
+        )"
+        :key="index"
+      >
+        <td>{{ index + 1 }}.</td>
+        <td>
+          {{ user[0] }}
+        </td>
+        <td>{{ user[1] }}</td>
+      </tr>
+    </table>
   </div>
 </template>
 
@@ -39,6 +42,9 @@ export default {
 
     solvers() {
       let result = []
+      this.users.map((user) => {
+        result[user] = 0
+      })
       this.solvedWords.map((word) => {
         result[word.solvedBy] = result[word.solvedBy]
           ? result[word.solvedBy] + 1
@@ -54,15 +60,22 @@ export default {
 .stats {
   margin-bottom: 2rem;
 
-  .score {
-    margin-top: 2rem;
-  }
-
   .scoreboard {
-    display: flex;
-    justify-content: space-between;
-    max-width: 200px;
+    width: 250px;
     margin: auto;
+
+    th,
+    td {
+      text-align: left;
+
+      &:nth-child(2) {
+        text-align: center;
+      }
+
+      &:nth-child(3) {
+        text-align: right;
+      }
+    }
   }
 }
 </style>

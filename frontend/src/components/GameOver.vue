@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="win">I think {{ winner }} won</p>
+    <p class="win">{{ winner }} won</p>
     <button @click="restart">Restart</button>
   </div>
 </template>
@@ -17,7 +17,6 @@ export default {
 
   computed: {
     winner() {
-      // TODO: Get winner
       return this.solution[0].solvedBy
     },
   },

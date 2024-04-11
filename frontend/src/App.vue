@@ -67,10 +67,6 @@ export default {
     disconnect() {
       console.log('Disconnected from server')
     },
-    'join game'(username) {
-      console.log(username, 'joined')
-      this.users.push(username)
-    },
     'update solution'(solution) {
       this.game.solution = solution
       this.checkGameOver()
@@ -78,6 +74,9 @@ export default {
     'reset game'(game) {
       this.game = game
       this.gameOver = false
+    },
+    'update users'(users) {
+      this.users = users
     },
   },
 

@@ -14,16 +14,29 @@ const io = require('socket.io')(server, {
     origin: '*',
   },
 })
+
+let users = []
+
 io.on('connection', (socket) => {
-  console.log('User connected')
+  let currentUser = null
+
+  console.log('New user joined')
 
   socket.on('disconnect', () => {
-    console.log('User disconnected')
+    console.log(`${currentUser ?? 'Unknown user'} disconnected`)
+    users = users.filter((u) => u !== currentUser)
+    io.emit('update users', users)
   })
 
   socket.on('join game', (username) => {
-    console.log(`User ${username} joined`)
-    io.emit('join game', username)
+    currentUser = username
+    io.emit('join game', currentUser)
+    if (!users.includes(currentUser)) {
+      users.push(currentUser)
+    }
+    console.log(`User ${currentUser} joined`)
+    console.log('all users: ', users)
+    io.emit('update users', users)
   })
 
   socket.on('update solution', (msg) => {
