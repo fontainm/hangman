@@ -249,14 +249,24 @@ export default {
 
 @media screen and (max-width: 767px) {
   .solution {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
+
+    div.word {
+      padding: 0.5rem;
+
+      span.username {
+        font-size: 0.5rem;
+        padding: 0.35rem;
+        top: -1.2rem;
+      }
+    }
   }
 
   .wrapper {
     button,
     input {
-      font-size: 1.75rem;
-      padding: 0.75rem;
+      font-size: 1.5rem;
+      padding: 0.5rem;
     }
   }
 }
