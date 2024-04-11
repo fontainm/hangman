@@ -17,7 +17,14 @@ export default {
 
   computed: {
     winner() {
-      return this.solution[0].solvedBy
+      let result = []
+      this.solution.map((word) => {
+        result[word.solvedBy] = result[word.solvedBy]
+          ? result[word.solvedBy] + 1
+          : 1
+      })
+      let winner = Object.entries(result).sort((a, b) => b[1] - a[1])
+      return winner[0][0]
     },
   },
 

@@ -2,7 +2,7 @@
   <div class="stats">
     <table class="scoreboard">
       <tr>
-        <th align="left">Rank</th>
+        <th>Rank</th>
         <th>User</th>
         <th>Score</th>
       </tr>
