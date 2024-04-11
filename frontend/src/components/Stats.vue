@@ -14,7 +14,7 @@
     </div>
 
     <div class="score">
-      {{ solvedWords.length }} / {{ solution.length }} revealed
+      {{ solvedWords.length }} / {{ solution.length }} solved
     </div>
   </div>
 </template>
