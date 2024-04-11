@@ -1,31 +1,34 @@
 <template>
   <div id="app">
-    <div v-if="game">
-      <div>You are: {{ username }}</div>
-      <div class="solution">
-        <div
-          v-for="(word, index) in game.solution"
-          :key="index"
-          class="word"
-          :class="{ solved: word.solved }"
-        >
-          <span>{{ word.text }}</span>
-          <span v-if="word.solved" class="username">{{ word.solvedBy }}</span>
+    <LoginForm v-if="!username" @join="setUser" />
+    <div v-else>
+      <div v-if="game">
+        <div>You are: {{ username }}</div>
+        <div class="solution">
+          <div
+            v-for="(word, index) in game.solution"
+            :key="index"
+            class="word"
+            :class="{ solved: word.solved }"
+          >
+            <span>{{ word.text }}</span>
+            <span v-if="word.solved" class="username">{{ word.solvedBy }}</span>
+          </div>
+        </div>
+        <Stats :solution="game.solution" :users="users" />
+        <GameOver
+          v-if="gameOver"
+          :solution="game.solution"
+          @restart="restart"
+          class="wrapper"
+        />
+        <div v-else class="wrapper">
+          <input type="text" v-model="guess" @keyup.enter="submit" />
+          <button type="submit" @click="submit">Guess</button>
         </div>
       </div>
-      <Stats :solution="game.solution" :users="users" />
-      <GameOver
-        v-if="gameOver"
-        :solution="game.solution"
-        @restart="restart"
-        class="wrapper"
-      />
-      <div v-else class="wrapper">
-        <input type="text" v-model="guess" @keyup.enter="submit" />
-        <button type="submit" @click="submit">Guess</button>
-      </div>
+      <div v-else>Loading</div>
     </div>
-    <div v-else>Loading</div>
   </div>
 </template>
 
@@ -35,6 +38,7 @@ import gamesService from './services/games'
 
 import GameOver from './components/GameOver'
 import Stats from './components/Stats'
+import LoginForm from './components/LoginForm'
 
 export default {
   name: 'App',
@@ -42,6 +46,7 @@ export default {
   components: {
     GameOver,
     Stats,
+    LoginForm,
   },
 
   data() {
@@ -77,20 +82,29 @@ export default {
   },
 
   async mounted() {
-    this.words = await wordsService.getAll()
-    this.username = window.localStorage.getItem('hangmanuser')
-    if (!this.username) {
-      this.createUsername()
-    }
-    this.$socket.emit('join game', this.username)
-    this.game = await gamesService.getGame()
-    if (!this.game) {
-      this.createGame()
-    }
-    this.checkGameOver()
+    this.setUser(window.localStorage.getItem('hangmanuser'))
   },
 
   methods: {
+    setUser(username) {
+      this.username = username
+      if (!this.username) {
+        return
+      }
+      window.localStorage.setItem('hangmanuser', this.username)
+      this.loadGame()
+    },
+
+    async loadGame() {
+      this.words = await wordsService.getAll()
+      this.$socket.emit('join game', this.username)
+      this.game = await gamesService.getGame()
+      if (!this.game) {
+        this.createGame()
+      }
+      this.checkGameOver()
+    },
+
     async submit() {
       const i = this.game.solution.findIndex(
         (word) => word.text.toLowerCase() === this.guess.toLowerCase()
@@ -136,13 +150,6 @@ export default {
 
       this.game = await gamesService.addGame(solution)
       this.$socket.emit('reset game', this.game)
-    },
-
-    createUsername() {
-      const adjective = this.getRandom(this.getType('adjective'))
-      const object = this.getRandom(this.getType('object'))
-      this.username = `${adjective.text}_${object.text}`
-      window.localStorage.setItem('hangmanuser', this.username)
     },
 
     getRandom(list) {
