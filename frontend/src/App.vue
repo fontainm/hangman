@@ -27,7 +27,9 @@
           <button type="submit" @click="submit">Guess</button>
         </div>
       </div>
-      <div v-else>Loading</div>
+      <div v-else>
+        <Loader />
+      </div>
     </div>
   </div>
 </template>
@@ -39,6 +41,7 @@ import gamesService from './services/games'
 import GameOver from './components/GameOver'
 import Stats from './components/Stats'
 import LoginForm from './components/LoginForm'
+import Loader from './components/Loader'
 
 export default {
   name: 'App',
@@ -47,6 +50,7 @@ export default {
     GameOver,
     Stats,
     LoginForm,
+    Loader,
   },
 
   data() {
