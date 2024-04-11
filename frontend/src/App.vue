@@ -101,7 +101,7 @@ export default {
     async loadGame() {
       this.words = await wordsService.getAll()
       this.$socket.emit('join game', this.username)
-      this.getGame()
+      await this.getGame()
       this.checkGameOver()
     },
 
