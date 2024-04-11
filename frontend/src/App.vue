@@ -3,7 +3,6 @@
     <LoginForm v-if="!username" @join="setUser" />
     <div v-else>
       <div v-if="game">
-        <div>You are: {{ username }}</div>
         <div class="solution">
           <div
             v-for="(word, index) in game.solution"
@@ -15,7 +14,7 @@
             <span v-if="word.solved" class="username">{{ word.solvedBy }}</span>
           </div>
         </div>
-        <Stats :solution="game.solution" :users="users" />
+        <Stats :solution="game.solution" :users="users" :username="username" />
         <GameOver
           v-if="gameOver"
           :solution="game.solution"

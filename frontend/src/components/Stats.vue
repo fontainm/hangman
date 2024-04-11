@@ -15,6 +15,7 @@
         <td>{{ index + 1 }}.</td>
         <td>
           {{ user[0] }}
+          <div v-if="user[0] === username" class="tag">YOU</div>
         </td>
         <td>{{ user[1] }}</td>
       </tr>
@@ -31,6 +32,9 @@ export default {
       required: true,
     },
     users: {
+      required: true,
+    },
+    username: {
       required: true,
     },
   },
@@ -61,7 +65,8 @@ export default {
   margin-bottom: 2rem;
 
   .scoreboard {
-    width: 250px;
+    width: 100%;
+    max-width: 300px;
     margin: auto;
 
     th,
@@ -75,6 +80,17 @@ export default {
       &:nth-child(3) {
         text-align: right;
       }
+    }
+
+    .tag {
+      background: #c4dbe0;
+      color: #0c6980;
+      display: inline-block;
+      border-radius: 4px;
+      padding: 0.25rem;
+      font-size: 0.75rem;
+      line-height: 1;
+      vertical-align: text-top;
     }
   }
 }
