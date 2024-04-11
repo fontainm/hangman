@@ -8,6 +8,12 @@ const wordSchema = new mongoose.Schema({
 wordSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString()
+    returnedObject.shuffledText = returnedObject.text
+      .split('')
+      .sort(function () {
+        return 0.5 - Math.random()
+      })
+      .join('')
     delete returnedObject._id
     delete returnedObject.__v
   },

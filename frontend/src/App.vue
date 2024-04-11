@@ -11,7 +11,7 @@
             class="word"
             :class="{ solved: word.solved }"
           >
-            <span>{{ word.text }}</span>
+            <span>{{ word.solved ? word.text : word.shuffledText }}</span>
             <span v-if="word.solved" class="username">{{ word.solvedBy }}</span>
           </div>
         </div>
@@ -97,10 +97,7 @@ export default {
     async loadGame() {
       this.words = await wordsService.getAll()
       this.$socket.emit('join game', this.username)
-      this.game = await gamesService.getGame()
-      if (!this.game) {
-        this.createGame()
-      }
+      this.getGame()
       this.checkGameOver()
     },
 
@@ -127,7 +124,14 @@ export default {
     async restart() {
       this.gameOver = false
       await gamesService.removeGame(this.game.id)
-      this.createGame()
+      this.getGame()
+    },
+
+    async getGame() {
+      this.game = await gamesService.getGame()
+      if (!this.game) {
+        this.createGame()
+      }
     },
 
     async createGame() {
