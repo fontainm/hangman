@@ -50,9 +50,10 @@ export default {
         result[user] = 0
       })
       this.solvedWords.map((word) => {
+        let score = word.text.length
         result[word.solvedBy] = result[word.solvedBy]
-          ? result[word.solvedBy] + 1
-          : 1
+          ? result[word.solvedBy] + score
+          : score
       })
       return result
     },
