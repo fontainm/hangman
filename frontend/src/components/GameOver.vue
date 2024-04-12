@@ -35,19 +35,3 @@ export default {
   },
 }
 </script>
-
-<style>
-.win {
-  text-transform: uppercase;
-  color: #0c6980;
-  font-weight: bold;
-  font-size: 3rem;
-  margin: 0 0 1rem 0;
-}
-
-@media screen and (max-width: 767px) {
-  .win {
-    font-size: 1.75rem;
-  }
-}
-</style>

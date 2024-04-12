@@ -51,16 +51,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss">
-button {
-  transition: all 0.3s ease;
-
-  &.disabled {
-    pointer-events: none;
-    opacity: 0.5;
-  }
-}
-@media screen and (max-width: 767px) {
-}
-</style>

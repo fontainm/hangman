@@ -59,39 +59,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss">
-.stats {
-  margin-bottom: 2rem;
-
-  .scoreboard {
-    width: 100%;
-    max-width: 300px;
-    margin: auto;
-
-    th,
-    td {
-      text-align: left;
-
-      &:nth-child(2) {
-        text-align: center;
-      }
-
-      &:nth-child(3) {
-        text-align: right;
-      }
-    }
-
-    .tag {
-      background: #c4dbe0;
-      color: #0c6980;
-      display: inline-block;
-      border-radius: 4px;
-      padding: 0.25rem;
-      font-size: 0.75rem;
-      line-height: 1;
-      vertical-align: text-top;
-    }
-  }
-}
-</style>

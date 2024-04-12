@@ -1,5 +1,10 @@
+@import 'variables';
+@import 'stats';
+@import 'loader';
+@import 'gameover';
+
 body {
-  background: #0c6980;
+  background: $color-primary;
   margin: 1rem;
 }
 
@@ -12,6 +17,107 @@ body {
 }
 
 * {
-  color: #c4dbe0;
+  color: $color-secondary;
   box-sizing: border-box;
+}
+
+.solution {
+  font-size: 3rem;
+  margin: 2rem 0;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  div.word {
+    padding: 1rem;
+    margin: 0.25rem;
+    line-height: 1;
+    background: $color-secondary;
+    opacity: 0.8;
+    border-radius: 0.5rem;
+    transform: rotateY(180deg);
+    transition: all 0.5s ease;
+    cursor: pointer;
+
+    span {
+      color: $color-primary;
+
+      &.username {
+        position: absolute;
+        font-size: 0.7rem;
+        background: $color-dark;
+        color: $color-secondary;
+        top: -1.7rem;
+        right: 0.5rem;
+        padding: 0.5rem;
+        border-radius: 0.5rem 0.5rem 0 0;
+      }
+    }
+
+    &.solved {
+      transform: rotateY(0);
+      opacity: 1;
+      box-shadow: 2px 2px 8px #444;
+    }
+  }
+}
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  background: $color-secondary;
+  width: 100%;
+  margin: auto;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: 2px 2px 8px #444;
+
+  input {
+    text-transform: uppercase;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    color: $color-primary;
+  }
+
+  button {
+    display: block;
+    text-transform: uppercase;
+    font-size: 2rem;
+    cursor: pointer;
+    background-color: $color-primary;
+  }
+
+  input,
+  button {
+    border: 0 !important;
+    outline: none !important;
+    padding: 1rem;
+    border-radius: 0.5rem;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .solution {
+    font-size: 1.5rem;
+
+    div.word {
+      padding: 0.5rem;
+
+      span.username {
+        font-size: 0.5rem;
+        padding: 0.35rem;
+        top: -1.2rem;
+      }
+    }
+  }
+
+  .wrapper {
+    button,
+    input {
+      font-size: 1.5rem;
+      padding: 0.5rem;
+    }
+  }
 }
